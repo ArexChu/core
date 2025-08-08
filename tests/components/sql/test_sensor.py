@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
+import sqlite3
 from datetime import timedelta
 from pathlib import Path
-import sqlite3
 from typing import Any
 from unittest.mock import patch
 
-from freezegun.api import FrozenDateTimeFactory
 import pytest
+from freezegun.api import FrozenDateTimeFactory
 from sqlalchemy.exc import SQLAlchemyError
 
 from homeassistant.components.recorder import CONF_DB_URL, Recorder
@@ -39,9 +39,9 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
-from homeassistant.helpers.entity_platform import async_get_platforms
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
+from tests.common import MockConfigEntry, async_fire_time_changed
 
 from . import (
     YAML_CONFIG,
@@ -52,8 +52,6 @@ from . import (
     YAML_CONFIG_FULL_TABLE_SCAN_WITH_MULTIPLE_COLUMNS,
     init_integration,
 )
-
-from tests.common import MockConfigEntry, async_fire_time_changed
 
 
 async def test_query_basic(recorder_mock: Recorder, hass: HomeAssistant) -> None:
@@ -638,17 +636,14 @@ async def test_query_recover_from_rollback(
         CONF_UNIQUE_ID: "very_unique_id",
     }
     await init_integration(hass, title="Select value SQL query", options=options)
-    platforms = async_get_platforms(hass, "sql")
-    sql_entity = platforms[0].entities["sensor.select_value_sql_query"]
 
     state = hass.states.get("sensor.select_value_sql_query")
     assert state.state == "5"
     assert state.attributes["value"] == 5
 
-    with patch.object(
-        sql_entity,
-        "_lambda_stmt",
-        _generate_lambda_stmt("Faulty syntax create operational issue"),
+    with patch(
+        "homeassistant.components.sql.sensor._generate_lambda_stmt",
+        return_value=_generate_lambda_stmt("Faulty syntax create operational issue"),
     ):
         freezer.tick(timedelta(minutes=1))
         async_fire_time_changed(hass)
