@@ -420,18 +420,6 @@ NUMBERS: dict[str, tuple[NumberEntityDescription, ...]] = {
             translation_key="temp_correction",
             entity_category=EntityCategory.CONFIG,
         ),
-        NumberEntityDescription(
-            key=DPCode.LOWER_TEMP,
-            translation_key="lower_temperature",
-            device_class=NumberDeviceClass.TEMPERATURE,
-            entity_category=EntityCategory.CONFIG,
-        ),
-        NumberEntityDescription(
-            key=DPCode.UPPER_TEMP,
-            translation_key="upper_temperature",
-            device_class=NumberDeviceClass.TEMPERATURE,
-            entity_category=EntityCategory.CONFIG,
-        ),
     ),
     # Micro Storage Inverter
     # Energy storage and solar PV inverter system with monitoring capabilities
