@@ -21,6 +21,8 @@ from .const import (
     ISSUE_KEY_ADDON_DETACHED_ADDON_REMOVED,
     ISSUE_KEY_SYSTEM_DOCKER_CONFIG,
     PLACEHOLDER_KEY_ADDON,
+    PLACEHOLDER_KEY_ADDON_DOCUMENTATION,
+    PLACEHOLDER_KEY_ADDON_INFO,
     PLACEHOLDER_KEY_COMPONENTS,
     PLACEHOLDER_KEY_REFERENCE,
 )
@@ -204,6 +206,13 @@ class AddonIssueRepairFlow(SupervisorIssueRepairFlow):
                 ]
             else:
                 placeholders[PLACEHOLDER_KEY_ADDON] = self.issue.reference
+
+            placeholders[PLACEHOLDER_KEY_ADDON_INFO] = (
+                f"homeassistant://hassio/addon/{self.issue.reference}/info"
+            )
+            placeholders[PLACEHOLDER_KEY_ADDON_DOCUMENTATION] = (
+                f"homeassistant://hassio/addon/{self.issue.reference}/documentation"
+            )
 
         return placeholders or None
 
