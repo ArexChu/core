@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import sqlite3
 from datetime import timedelta
 from pathlib import Path
+import sqlite3
 from typing import Any
 from unittest.mock import patch
 
-import pytest
 from freezegun.api import FrozenDateTimeFactory
+import pytest
 from sqlalchemy.exc import SQLAlchemyError
 
 from homeassistant.components.recorder import CONF_DB_URL, Recorder
@@ -41,7 +41,6 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.setup import async_setup_component
 from homeassistant.util import dt as dt_util
-from tests.common import MockConfigEntry, async_fire_time_changed
 
 from . import (
     YAML_CONFIG,
@@ -52,6 +51,8 @@ from . import (
     YAML_CONFIG_FULL_TABLE_SCAN_WITH_MULTIPLE_COLUMNS,
     init_integration,
 )
+
+from tests.common import MockConfigEntry, async_fire_time_changed
 
 
 async def test_query_basic(recorder_mock: Recorder, hass: HomeAssistant) -> None:
