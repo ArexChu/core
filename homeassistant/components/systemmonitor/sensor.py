@@ -173,9 +173,11 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=PERCENTAGE,
         device_class=SensorDeviceClass.BATTERY,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: entity.coordinator.data.battery.percent
-        if entity.coordinator.data.battery
-        else None,
+        value_fn=(
+            lambda entity: entity.coordinator.data.battery.percent
+            if entity.coordinator.data.battery
+            else None
+        ),
         none_is_unavailable=True,
         add_to_update=lambda entity: ("battery", ""),
     ),
@@ -197,11 +199,13 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=UnitOfInformation.GIBIBYTES,
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: round(
-            entity.coordinator.data.disk_usage[entity.argument].free / 1024**3, 1
-        )
-        if entity.argument in entity.coordinator.data.disk_usage
-        else None,
+        value_fn=(
+            lambda entity: round(
+                entity.coordinator.data.disk_usage[entity.argument].free / 1024**3, 1
+            )
+            if entity.argument in entity.coordinator.data.disk_usage
+            else None
+        ),
         none_is_unavailable=True,
         add_to_update=lambda entity: ("disks", entity.argument),
     ),
@@ -212,11 +216,13 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=UnitOfInformation.GIBIBYTES,
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: round(
-            entity.coordinator.data.disk_usage[entity.argument].used / 1024**3, 1
-        )
-        if entity.argument in entity.coordinator.data.disk_usage
-        else None,
+        value_fn=(
+            lambda entity: round(
+                entity.coordinator.data.disk_usage[entity.argument].used / 1024**3, 1
+            )
+            if entity.argument in entity.coordinator.data.disk_usage
+            else None
+        ),
         none_is_unavailable=True,
         add_to_update=lambda entity: ("disks", entity.argument),
     ),
@@ -226,11 +232,11 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         placeholder="mount_point",
         native_unit_of_measurement=PERCENTAGE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: entity.coordinator.data.disk_usage[
-            entity.argument
-        ].percent
-        if entity.argument in entity.coordinator.data.disk_usage
-        else None,
+        value_fn=(
+            lambda entity: entity.coordinator.data.disk_usage[entity.argument].percent
+            if entity.argument in entity.coordinator.data.disk_usage
+            else None
+        ),
         none_is_unavailable=True,
         add_to_update=lambda entity: ("disks", entity.argument),
     ),
@@ -308,13 +314,15 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=UnitOfInformation.MEBIBYTES,
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: round(
-            (
-                entity.coordinator.data.memory.total
-                - entity.coordinator.data.memory.available
+        value_fn=(
+            lambda entity: round(
+                (
+                    entity.coordinator.data.memory.total
+                    - entity.coordinator.data.memory.available
+                )
+                / 1024**2,
+                1,
             )
-            / 1024**2,
-            1,
         ),
         add_to_update=lambda entity: ("memory", ""),
     ),
@@ -394,10 +402,12 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=PERCENTAGE,
         icon=get_cpu_icon(),
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: (
-            round(entity.coordinator.data.cpu_percent)
-            if entity.coordinator.data.cpu_percent
-            else None
+        value_fn=(
+            lambda entity: (
+                round(entity.coordinator.data.cpu_percent)
+                if entity.coordinator.data.cpu_percent
+                else None
+            )
         ),
         add_to_update=lambda entity: ("cpu_percent", ""),
     ),
@@ -407,8 +417,8 @@ SENSOR_TYPES: dict[str, SysMonitorSensorEntityDescription] = {
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         device_class=SensorDeviceClass.TEMPERATURE,
         state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda entity: read_cpu_temperature(
-            entity.coordinator.data.temperatures
+        value_fn=(
+            lambda entity: read_cpu_temperature(entity.coordinator.data.temperatures)
         ),
         none_is_unavailable=True,
         add_to_update=lambda entity: ("temperatures", ""),
