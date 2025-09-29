@@ -180,14 +180,17 @@ class BaseUnitConverter:
 
 
 class CarbonMonoxideConcentrationConverter(BaseUnitConverter):
-    """Convert carbon monoxide ratio to mass per volume."""
+    """Convert carbon monoxide ratio to mass per volume.
+
+    Using Standard Ambient Temperature and Pressure (SATP) conditions.
+    """
 
     UNIT_CLASS = "carbon_monoxide"
     _UNIT_CONVERSION: dict[str | None, float] = {
         CONCENTRATION_PARTS_PER_MILLION: 1e6,
-        CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER: _CARBON_MONOXIDE_MOLECULAR_WEIGHT
-        * 1e3
-        / _SATP_IDEAL_GAS_MOLAR_VOLUME,
+        CONCENTRATION_MILLIGRAMS_PER_CUBIC_METER: (
+            _CARBON_MONOXIDE_MOLECULAR_WEIGHT / _SATP_IDEAL_GAS_MOLAR_VOLUME * 1e3
+        ),
     }
     VALID_UNITS = {
         CONCENTRATION_PARTS_PER_MILLION,
