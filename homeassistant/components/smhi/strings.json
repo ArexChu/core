@@ -59,55 +59,55 @@
       "fwiindex": {
         "name": "FWI-index",
         "state": {
-          "1": "Very low risk",
-          "2": "Low risk",
-          "3": "Moderate risk",
-          "4": "High risk",
-          "5": "Very high risk",
-          "6": "Extremely high risk"
+          "very_low_risk": "Very low risk",
+          "low_risk": "Low risk",
+          "moderate_risk": "Moderate risk",
+          "high_risk": "High risk",
+          "very_high_risk": "Very high risk",
+          "extremely_high_risk": "Extremely high risk"
         }
       },
-      "fwi": {
+      "fire_weather_index": {
         "name": "Fire Weather Index"
       },
-      "isi": {
+      "initial_spread_index": {
         "name": "Initial Spread Index"
       },
-      "bui": {
+      "build_up_index": {
         "name": "Build Up Index"
       },
-      "ffmc": {
+      "fine_fuel_moisture_code": {
         "name": "Fine Fuel Moisture Code"
       },
-      "dmc": {
+      "duff_moisture_code": {
         "name": "Duff Moisture Code"
       },
-      "dc": {
+      "drought_code": {
         "name": "Drought Code"
       },
       "grassfire": {
         "name": "Highest grass fire risk",
         "state": {
-          "1": "Snow cover",
-          "2": "Grass fire season over",
-          "3": "Low",
-          "4": "Moderate",
-          "5": "High",
-          "6": "Very high"
+          "snow_cover": "Snow cover",
+          "season_over": "Grass fire season over",
+          "low": "Low",
+          "moderate": "Moderate",
+          "high": "High",
+          "very_high": "Very high"
         }
       },
-      "rn": {
+      "rate_of_spread": {
         "name": "Potential rate of spread"
       },
       "forestdry": {
         "name": "Fuel drying",
         "state": {
-          "1": "Very wet",
-          "2": "Wet",
-          "3": "Moderate wet",
-          "4": "Dry",
-          "5": "Very dry",
-          "6": "Extremely dry"
+          "very_wet": "Very wet",
+          "wet": "Wet",
+          "moderate_wet": "Moderate wet",
+          "dry": "Dry",
+          "very_dry": "Very dry",
+          "extremely_dry": "Extremely dry"
         }
       }
     }

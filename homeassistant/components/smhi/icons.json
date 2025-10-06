@@ -22,32 +22,31 @@
       "frozen_precipitation": {
         "default": "mdi:weather-snowy-rainy"
       },
-
       "fwiindex": {
         "default": "mdi:pine-tree-fire"
       },
-      "fwi": {
+      "fire_weather_index": {
         "default": "mdi:pine-tree-fire"
       },
-      "isi": {
+      "initial_spread_index": {
         "default": "mdi:grass"
       },
-      "bui": {
+      "build_up_index": {
         "default": "mdi:grass"
       },
-      "ffmc": {
+      "fine_fuel_moisture_code": {
         "default": "mdi:grass"
       },
-      "dmc": {
+      "duff_moisture_code": {
         "default": "mdi:grass"
       },
-      "dc": {
+      "drought_code": {
         "default": "mdi:grass"
       },
       "grassfire": {
         "default": "mdi:fire-circle"
       },
-      "rn": {
+      "rate_of_spread": {
         "default": "mdi:grass"
       },
       "forestdry": {
