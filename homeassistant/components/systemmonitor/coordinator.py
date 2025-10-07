@@ -73,10 +73,10 @@ class SensorData:
             "io_counters": io_counters,
             "load": str(self.load),
             "memory": str(self.memory),
+            "process_fds": self.process_fds,
             "processes": str(self.processes),
             "swap": str(self.swap),
             "temperatures": temperatures,
-            "process_fds": self.process_fds,
         }
 
 
@@ -173,10 +173,10 @@ class SystemMonitorCoordinator(TimestampDataUpdateCoordinator[SensorData]):
             io_counters=_data["io_counters"],
             load=load,
             memory=_data["memory"],
+            process_fds=_data["process_fds"],
             processes=_data["processes"],
             swap=_data["swap"],
             temperatures=_data["temperatures"],
-            process_fds=_data["process_fds"],
         )
 
     def update_data(self) -> dict[str, Any]:
@@ -289,12 +289,12 @@ class SystemMonitorCoordinator(TimestampDataUpdateCoordinator[SensorData]):
             "addresses": addresses,
             "battery": battery,
             "boot_time": self.boot_time,
-            "processes": selected_processes,
             "disks": disks,
             "fan_speed": fan_speed,
             "io_counters": io_counters,
             "memory": memory,
+            "process_fds": process_fds,
+            "processes": selected_processes,
             "swap": swap,
             "temperatures": temps,
-            "process_fds": process_fds,
         }
