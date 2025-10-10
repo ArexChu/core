@@ -44,18 +44,44 @@ jobs:
 
       - name: Build homeassistant executable (auto include all deps)
         run: |
-          python3.13 -m pip list --format freeze
-          ALL_PKGS=$(python3.13 -m pip list --format freeze | cut -d= -f1 | xargs -I{} echo --collect-all {})
+          python3.13 - <<'PYCODE' > collect_args.txt
+          import importlib.metadata
+          
+          collects = []
+          for dist in importlib.metadata.distributions():
+              name = dist.metadata['Name']
+              top_level = None
+              try:
+                  top_level = dist.read_text('top_level.txt')
+              except FileNotFoundError:
+                  pass
+              if top_level:
+                  for module in top_level.splitlines():
+                      if module.strip():
+                          collects.append(f"--collect-all {module.strip()}")
+              else:
+                  # fallback to normalized name
+                  collects.append(f"--collect-all {name.replace('-', '_')}")
+          print(' '.join(collects))
+          PYCODE
+          
+          ALL_COLLECTS=$(cat collect_args.txt)
+          
+          SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
+          EXTRA_DATA=$(find $SITE_PACKAGES -maxdepth 1 -type f \( -name "*.so" -o -name "*.py" \) -printf "--add-data '%p:.' ")
+          
           pyinstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
-            $ALL_PKGS \
+            $ALL_COLLECTS \
+            $EXTRA_DATA \
             run_homeassistant.py
           ls -lh dist/
 
       - name: Test binary
         run: |
           ./dist/homeassistant --version
+          ./dist/homeassistant -c "import aiohttp, cryptography, dbus_fast, ciso8601; print('ok')"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
