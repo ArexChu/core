@@ -1,0 +1,72 @@
+name: Build Release
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-arm64:
+    runs-on: ubuntu-22.04-arm
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python 3.13 from custom .deb
+        run: |
+          sudo apt-get update
+          wget https://github.com/ArexChu/cpython/releases/download/v3.13.7-6/python3.13_3.13.7-1_arm64.deb
+          sudo apt install -y ./python3.13_3.13.7-1_arm64.deb
+          python3.13 --version
+          python3.13 -m ensurepip
+          python3.13 -m pip install --upgrade pip wheel build setuptools
+
+      - name: Patch pkgutil for old setup.py compatibility
+        run: |
+          echo -e "\n# Compatibility shim for removed ImpImporter\nclass ImpImporter: pass" | sudo tee -a $(python3.13 -c "import pkgutil; print(pkgutil.__file__)")
+
+      - name: Install dependencies from source
+        run: |
+          python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
+          python3.13 -m pip install .
+          python3.13 -m pip install pyinstaller
+
+      - name: Prepare entrypoint
+        run: |
+          cat > run_homeassistant.py << 'EOF'
+          import os
+          import sys
+          if getattr(sys, "frozen", False):
+              sys.executable = "/usr/local/bin/python3.13"
+          from homeassistant.__main__ import main
+          if __name__ == "__main__":
+              main()
+          EOF
+
+      - name: Build homeassistant executable (auto include all deps)
+        run: |
+          python3.13 -m pip list --format freeze
+          ALL_PKGS=$(python3.13 -m pip list --format freeze | cut -d= -f1 | xargs -I{} echo --collect-all {})
+          pyinstaller --onefile \
+            --name homeassistant \
+            --collect-all homeassistant \
+            $ALL_PKGS \
+            run_homeassistant.py
+          ls -lh dist/
+
+      - name: Test binary
+        run: |
+          ./dist/homeassistant --version
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: homeassistant
+          path: dist/homeassistant
+
+      - name: Upload binary to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "v2025.10.1-${{ github.run_number }}"
+          files: dist/homeassistant
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
