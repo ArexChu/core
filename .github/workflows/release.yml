@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies from source
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
-          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1
+          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1 home-assistant-frontend==20251001.0 PyTurboJPEG==1.8.0 pymicro-vad==1.0.1 pyspeex-noise==1.0.2 python-matter-server==8.1.0
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
 
@@ -63,8 +63,8 @@ jobs:
               else:
                   collects.append(f"--collect-all {name.replace('-', '_')}")
           extra_modules = [
-              "jinja2", "zwave_js_server", "typing_extensions",
-              "pyodide"
+              "Jinja2", "zwave-js-server-python", "typing-extensions",
+              "pyodide-py", "zwave-me-ws"
           ]
           for m in extra_modules:
               collects.append(f"--collect-all {m}")
