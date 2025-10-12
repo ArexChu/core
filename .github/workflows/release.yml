@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies from source
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
+          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
 
@@ -60,9 +61,14 @@ jobs:
                       if module.strip():
                           collects.append(f"--collect-all {module.strip()}")
               else:
-                  # fallback to normalized name
                   collects.append(f"--collect-all {name.replace('-', '_')}")
-          print(' '.join(collects))
+          extra_modules = [
+              "jinja2", "zwave_js_server", "typing_extensions",
+              "pyodide"
+          ]
+          for m in extra_modules:
+              collects.append(f"--collect-all {m}")
+          print(' '.join(sorted(set(collects))))
           PYCODE
           
           ALL_COLLECTS=$(cat collect_args.txt)
@@ -81,7 +87,7 @@ jobs:
       - name: Test binary
         run: |
           ./dist/homeassistant --version
-          ./dist/homeassistant -c "import aiohttp, cryptography, dbus_fast, ciso8601; print('ok')"
+          ./dist/homeassistant -c "import pyotp, PyQRCode; print('ok')"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
