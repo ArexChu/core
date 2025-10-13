@@ -47,7 +47,7 @@ jobs:
         run: |
           python3.13 - <<'PYCODE' > collect_args.txt
           import importlib.metadata
-          
+
           collects = []
           for dist in importlib.metadata.distributions():
               name = dist.metadata['Name']
@@ -62,26 +62,33 @@ jobs:
                           collects.append(f"--collect-all {module.strip()}")
               else:
                   collects.append(f"--collect-all {name.replace('-', '_')}")
-          extra_modules = [
-              "Jinja2", "zwave-js-server-python", "typing-extensions",
-              "pyodide-py", "zwave-me-ws"
-          ]
-          for m in extra_modules:
-              collects.append(f"--collect-all {m}")
+
           print(' '.join(sorted(set(collects))))
           PYCODE
-          
+
+          python3.13 - <<'PYCODE' > extra_hidden_imports.txt
+          extra_modules = [
+              "Jinja2",
+              "typing-extensions"
+          ]
+          args = [f"--hidden-import {m}" for m in extra_modules]
+          print(' '.join(args))
+          PYCODE
+
           ALL_COLLECTS=$(cat collect_args.txt)
-          
+          EXTRA_HIDDEN_IMPORTS=$(cat extra_hidden_imports.txt)
           SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
           EXTRA_DATA=$(find $SITE_PACKAGES -maxdepth 1 -type f \( -name "*.so" -o -name "*.py" \) -printf "--add-data '%p:.' ")
-          
+
           pyinstaller --onefile \
             --name homeassistant \
+            --collect-submodules homeassistant \
             --collect-all homeassistant \
             $ALL_COLLECTS \
+            $EXTRA_HIDDEN_IMPORTS \
             $EXTRA_DATA \
             run_homeassistant.py
+
           ls -lh dist/
 
       - name: Test binary
