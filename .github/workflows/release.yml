@@ -28,8 +28,8 @@ jobs:
       - name: Install dependencies from source
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
-          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1 PyTurboJPEG==1.8.0 pymicro-vad==1.0.1 pyspeex-noise==1.0.2 python-matter-server==8.1.0 PyNaCl==1.6.0
-          python3.13 -m pip install mysqlclient hassil home-assistant-intents
+          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1 home-assistant-frontend==20251001.0 PyTurboJPEG==1.8.0 pymicro-vad==1.0.1 pyspeex-noise==1.0.2 python-matter-server==8.1.0 PyNaCl==1.6.0
+          python3.13 -m pip install mysqlclient hassil home-assistant-intents mutagen
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
 
