@@ -61,9 +61,9 @@ jobs:
               if top_level:
                   for module in top_level.splitlines():
                       if module.strip():
-                          collects.append(f"--collect-all {module.strip()}")
+                          collects.append(f"--hidden-import {module.strip()}")
               else:
-                  collects.append(f"--collect-all {name.replace('-', '_')}")
+                  collects.append(f"--hidden-import {name.replace('-', '_')}")
 
           print(' '.join(sorted(set(collects))))
           PYCODE
@@ -75,6 +75,16 @@ jobs:
           pyinstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
+            --exclude-module pytest \
+            --exclude-module unittest \
+            --exclude-module test \
+            --exclude-module tests \
+            --exclude-module mypy \
+            --exclude-module black \
+            --exclude-module pylint \
+            --exclude-module setuptools \
+            --exclude-module wheel \
+            --exclude-module pip \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
