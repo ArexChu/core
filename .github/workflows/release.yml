@@ -87,7 +87,6 @@ jobs:
             --exclude-module pip \
             $ALL_COLLECTS \
             $EXTRA_DATA \
-            --strip \
             run_homeassistant.py
 
           ls -lh dist/
