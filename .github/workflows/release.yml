@@ -61,9 +61,9 @@ jobs:
               if top_level:
                   for module in top_level.splitlines():
                       if module.strip():
-                          collects.append(f"--hidden-import {module.strip()}")
+                          collects.append(f"--collect-all {module.strip()}")
               else:
-                  collects.append(f"--hidden-import {name.replace('-', '_')}")
+                  collects.append(f"--collect-all {name.replace('-', '_')}")
 
           print(' '.join(sorted(set(collects))))
           PYCODE
@@ -85,7 +85,6 @@ jobs:
             --exclude-module setuptools \
             --exclude-module wheel \
             --exclude-module pip \
-            --hidden-import=jaraco.text \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
