@@ -82,20 +82,12 @@ jobs:
           pyinstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
-            --exclude-module pytest \
-            --exclude-module unittest \
-            --exclude-module test \
-            --exclude-module tests \
-            --exclude-module mypy \
-            --exclude-module black \
-            --exclude-module pylint \
-            --exclude-module setuptools \
-            --exclude-module wheel \
-            --exclude-module pip \
+            --noupx \
+            --lzma no \
+            --noconfirm \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
-
           ls -lh dist/
 
       - name: Test binary
