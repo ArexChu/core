@@ -79,7 +79,7 @@ jobs:
           SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
           EXTRA_DATA=$(find $SITE_PACKAGES -maxdepth 1 -type f \( -name "*.so" \) -printf "--add-data '%p:.' ")
       
-          pyinstaller --onefile \
+          python3.13 -m PyInstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
             --noupx \
