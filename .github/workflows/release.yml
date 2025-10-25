@@ -83,7 +83,7 @@ jobs:
             --name homeassistant \
             --collect-all homeassistant \
             --noupx \
-            --lzma no \
+            --nocompress \
             --noconfirm \
             $ALL_COLLECTS \
             $EXTRA_DATA \
