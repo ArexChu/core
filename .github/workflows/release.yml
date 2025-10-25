@@ -45,6 +45,12 @@ jobs:
               main()
           EOF
 
+      - name: Remove problematic example modules
+        run: |
+          SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
+          echo "Cleaning usage_example.py from site-packages..."
+          find $SITE_PACKAGES -type f -name "usage_example.py" -print -delete
+
       - name: Build homeassistant executable (auto include all deps)
         run: |
           python3.13 - <<'PYCODE' > collect_args.txt
