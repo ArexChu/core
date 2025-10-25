@@ -45,20 +45,19 @@ jobs:
               main()
           EOF
 
-      - name: Remove problematic example modules
-        run: |
-          SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
-          echo "Cleaning usage_example.py from site-packages..."
-          find $SITE_PACKAGES -type f -name "usage_example.py" -print -delete
-
       - name: Build homeassistant executable (auto include all deps)
         run: |
           python3.13 - <<'PYCODE' > collect_args.txt
           import importlib.metadata
-
+          EXCLUDE_KEYWORDS = {"example", "romy"}
           collects = []
           for dist in importlib.metadata.distributions():
-              name = dist.metadata['Name']
+              name = dist.metadata.get('Name')
+              if not name:
+                  continue
+              lname = name.lower()
+              if any(k in lname for k in EXCLUDE_KEYWORDS):
+                  continue
               top_level = None
               try:
                   top_level = dist.read_text('top_level.txt')
@@ -66,18 +65,20 @@ jobs:
                   pass
               if top_level:
                   for module in top_level.splitlines():
-                      if module.strip():
-                          collects.append(f"--collect-all {module.strip()}")
+                      if not module.strip():
+                          continue
+                      if any(k in module.lower() for k in EXCLUDE_KEYWORDS):
+                          continue
+                      collects.append(f"--collect-all {module.strip()}")
               else:
                   collects.append(f"--collect-all {name.replace('-', '_')}")
-
           print(' '.join(sorted(set(collects))))
           PYCODE
-
+      
           ALL_COLLECTS=$(cat collect_args.txt)
           SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
-          EXTRA_DATA=$(find $SITE_PACKAGES -maxdepth 1 -type f \( -name "*.so" -o -name "*.py" \) -printf "--add-data '%p:.' ")
-
+          EXTRA_DATA=$(find $SITE_PACKAGES -maxdepth 1 -type f \( -name "*.so" \) -printf "--add-data '%p:.' ")
+      
           pyinstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
@@ -91,7 +92,6 @@ jobs:
             --exclude-module setuptools \
             --exclude-module wheel \
             --exclude-module pip \
-            --exclude-module usage_example \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
