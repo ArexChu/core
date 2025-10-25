@@ -83,8 +83,6 @@ jobs:
             --name homeassistant \
             --collect-all homeassistant \
             --noupx \
-            --nocompress \
-            --noconfirm \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
