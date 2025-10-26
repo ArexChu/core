@@ -25,6 +25,19 @@ jobs:
         run: |
           echo -e "\n# Compatibility shim for removed ImpImporter\nclass ImpImporter: pass" | sudo tee -a $(python3.13 -c "import pkgutil; print(pkgutil.__file__)")
 
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          echo "dir=$(python3.13 -m pip cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies from source
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
@@ -49,7 +62,7 @@ jobs:
         run: |
           python3.13 - <<'PYCODE' > collect_args.txt
           import importlib.metadata
-          EXCLUDE_KEYWORDS = {"example", "romy"}
+          EXCLUDE_KEYWORDS = {"example", "pylint", "test"}
           collects = []
           for dist in importlib.metadata.distributions():
               name = dist.metadata.get('Name')
