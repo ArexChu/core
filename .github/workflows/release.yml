@@ -90,7 +90,7 @@ jobs:
       
           ALL_COLLECTS=$(cat collect_args.txt)
           SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
-          EXTRA_DATA=$(find $SITE_PACKAGES -type f \( -name "*.so" \) -printf "--add-data '%p:.' ")
+          EXTRA_DATA=$(find $SITE_PACKAGES -type f \( -name "*.so" \) -printf "--add-binary '%p:.' ")
       
           python3.13 -m PyInstaller --onefile \
             --name homeassistant \
