@@ -42,7 +42,7 @@ jobs:
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
           python3.13 -m pip install -r requirements_all.txt
-          python3.13 -m pip install mysqlclient
+          python3.13 -m pip install mysqlclient pycrypto
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
 
