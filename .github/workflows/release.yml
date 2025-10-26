@@ -87,11 +87,16 @@ jobs:
                   collects.append(f"--collect-all {name.replace('-', '_')}")
           print(' '.join(sorted(set(collects))))
           PYCODE
-      
+
           ALL_COLLECTS=$(cat collect_args.txt)
           SITE_PACKAGES=$(python3.13 -c "import site; print(site.getsitepackages()[0])")
-          EXTRA_DATA=$(find $SITE_PACKAGES -type f \( -name "*.so" \) -printf "--add-binary '%p:.' ")
+          
+          # Collect .so files from site-packages (e.g., from homeassistant or other dependencies)
+          EXTRA_DATA=$(find $SITE_PACKAGES -type f -name "*.so" -printf "--add-binary '%p:.' ")
       
+          # Collect .so files from homeassistant directory as well (if relevant)
+          EXTRA_HOMEASSISTANT_SO=$(find $(python3.13 -c "import homeassistant; print(homeassistant.__path__[0])") -type f -name "*.so" -printf "--add-binary '%p:.' ")
+
           python3.13 -m PyInstaller --onefile \
             --name homeassistant \
             --collect-all homeassistant \
@@ -109,6 +114,7 @@ jobs:
             --exclude-module pycryptodome \
             $ALL_COLLECTS \
             $EXTRA_DATA \
+            $EXTRA_HOMEASSISTANT_SO \
             run_homeassistant.py
           ls -lh dist/
 
