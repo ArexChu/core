@@ -62,7 +62,7 @@ jobs:
         run: |
           python3.13 - <<'PYCODE' > collect_args.txt
           import importlib.metadata
-          EXCLUDE_KEYWORDS = {"example", "pylint", "test"}
+          EXCLUDE_KEYWORDS = {"example", "test"}
           collects = []
           for dist in importlib.metadata.distributions():
               name = dist.metadata.get('Name')
@@ -96,6 +96,16 @@ jobs:
             --name homeassistant \
             --collect-all homeassistant \
             --noupx \
+            --exclude-module pytest \
+            --exclude-module unittest \
+            --exclude-module test \
+            --exclude-module tests \
+            --exclude-module mypy \
+            --exclude-module black \
+            --exclude-module pylint \
+            --exclude-module setuptools \
+            --exclude-module wheel \
+            --exclude-module pip \
             $ALL_COLLECTS \
             $EXTRA_DATA \
             run_homeassistant.py
