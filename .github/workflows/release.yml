@@ -33,6 +33,14 @@ jobs:
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
 
+      - name: Add ha-dual-smart-thermostat custom integration
+        run: |
+          mkdir -p custom_components
+          git clone https://github.com/swingerman/ha-dual-smart-thermostat.git
+          mv ha-dual-smart-thermostat/custom_components/dual_smart_thermostat custom_components/
+          rm -rf ha-dual-smart-thermostat
+          echo "ha-dual-smart-thermostat added to custom_components"
+
       - name: Prepare entrypoint
         run: |
           cat > run_homeassistant.py << 'EOF'
