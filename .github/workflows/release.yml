@@ -28,18 +28,10 @@ jobs:
       - name: Install dependencies from source
         run: |
           python3.13 -m pip install -c homeassistant/package_constraints.txt -r requirements.txt
-          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1 home-assistant-frontend==20251001.0 PyTurboJPEG==1.8.0 pymicro-vad==1.0.1 pyspeex-noise==1.0.2 python-matter-server==8.1.0 home-assistant-intents==2025.10.1 PyNaCl==1.6.0 mutagen==1.47.0 hassil==3.2.0 ha-ffmpeg==3.2.2 aiousbwatcher==1.1.1 pyserial==3.5 jsonpath==0.82.2 RestrictedPython==8.0
+          python3.13 -m pip install pyotp==2.9.0 PyQRCode==1.2.1 home-assistant-frontend==20251001.0 PyTurboJPEG==1.8.0 pymicro-vad==1.0.1 pyspeex-noise==1.0.2 python-matter-server==8.1.0 home-assistant-intents==2025.10.1 PyNaCl==1.6.0 mutagen==1.47.0 hassil==3.2.0 ha-ffmpeg==3.2.2 aiousbwatcher==1.1.1 pyserial==3.5 jsonpath==0.82.2 watchdog==6.0.0 croniter==6.0.0
           python3.13 -m pip install mysqlclient bleak
           python3.13 -m pip install .
           python3.13 -m pip install pyinstaller
-
-      - name: Add ha-dual-smart-thermostat custom integration
-        run: |
-          mkdir -p custom_components
-          git clone https://github.com/swingerman/ha-dual-smart-thermostat.git
-          mv ha-dual-smart-thermostat/custom_components/dual_smart_thermostat homeassistant/components/
-          rm -rf ha-dual-smart-thermostat
-          echo "ha-dual-smart-thermostat added to custom_components"
 
       - name: Prepare entrypoint
         run: |
